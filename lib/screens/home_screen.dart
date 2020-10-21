@@ -1,6 +1,7 @@
 import 'package:covid19/screens/bottom_nav_screens.dart';
 import 'package:covid19/widgets/country_dropdown.dart';
 import 'package:covid19/widgets/custom_app_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:covid19/styles/styles.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -73,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
         physics: ClampingScrollPhysics(),
         slivers: <Widget>[
           _buildHeader(screenHeight),
-          _buildNotification(screenHeight),
+          _buildSymptoms(screenHeight),
           _buildTest(screenHeight),
         ],
       ),
@@ -190,33 +191,43 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  SliverToBoxAdapter _buildNotification(double screenHeight) {
+  SliverToBoxAdapter _buildSymptoms(double screenHeight) {
     return SliverToBoxAdapter(
       child: Container(
-        margin: const EdgeInsets.symmetric(
-          vertical: 10.0,
-        ),
-        padding: const EdgeInsets.all(20.0),
-        alignment: Alignment.center,
+        margin: EdgeInsets.only(left: 20.0, top: 15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              'Notification',
-              style: const TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            Container(
-              height: 100.0,
-              child: Text(
-                "Nothing in life is to be feared, it is only to be understood. Now is the time to understand more, so that we may fear less.",
+            RichText(
+              text: TextSpan(
+                text: "Symptoms of ",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 20,
+                  color: Colors.black87,
                 ),
+                children: [
+                  TextSpan(
+                    text: "COVID-19",
+                    style: TextStyle(
+                      color: Styles.primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 25),
+            Container(
+              height: 160,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                physics: BouncingScrollPhysics(),
+                children: <Widget>[
+                  _buildSymptomItem("assets/images/1.png", "Fever"),
+                  _buildSymptomItem("assets/images/2.png", "Dry Cough"),
+                  _buildSymptomItem("assets/images/3.png", "Headache"),
+                  _buildSymptomItem("assets/images/4.png", "Breathless"),
+                ],
               ),
             ),
           ],
@@ -290,6 +301,51 @@ class _HomeScreenState extends State<HomeScreen> {
               'https://www.publichealthontario.ca/en/laboratory-services/test-information-index/wuhan-novel-coronavirus');
         },
       ),
+    );
+  }
+
+  Widget _buildSymptomItem(String path, String text) {
+    return Column(
+      children: <Widget>[
+        Container(
+          width: 120,
+          height: 120,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(15),
+            ),
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFFAD9FE4),
+                Styles.secondColor,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            border: Border.all(color: Colors.white),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                offset: Offset(1, 1),
+                spreadRadius: 1,
+                blurRadius: 3,
+              )
+            ],
+          ),
+          padding: EdgeInsets.only(top: 15),
+          child: Image.asset(path),
+          margin: EdgeInsets.only(right: 10),
+        ),
+        SizedBox(height: 8),
+        Text(
+          text,
+          style: TextStyle(
+            color: Colors.black87,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }

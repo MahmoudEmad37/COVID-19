@@ -1,4 +1,4 @@
-import 'package:covid19/screens/bottom_nav_screens.dart';
+import 'package:covid19/screens/intro_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(Covid_19());
@@ -12,7 +12,7 @@ class Covid_19 extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: BottomNavScreens(),
+      home: IntroScreen(),
     );
   }
 }

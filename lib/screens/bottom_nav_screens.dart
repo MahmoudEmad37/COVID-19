@@ -1,3 +1,4 @@
+import 'package:covid19/screens/Prevention_screen.dart';
 import 'package:covid19/screens/countries_screen.dart';
 import 'package:covid19/screens/home_screen.dart';
 import 'package:covid19/screens/stats_screen.dart';
@@ -17,7 +18,7 @@ class _BottomNavScreensState extends State<BottomNavScreens> {
     HomeScreen(country),
     StatsScreen(country),
     CountriesScreen(),
-    Scaffold(),
+    PreventionScreen(),
   ];
   int _currentIndex = 0;
 
@@ -66,6 +67,6 @@ class _BottomNavScreensState extends State<BottomNavScreens> {
 class CountryName {
   String name;
   CountryName() {
-    name = "US";
+    name = "EG";
   }
 }

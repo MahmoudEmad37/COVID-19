@@ -29,7 +29,10 @@ class _CountriesScreenState extends State<CountriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Countries Status'),
+        centerTitle: true,
+        title: Text(
+          'Countries Status',
+        ),
         backgroundColor: Styles.primaryColor,
       ),
       body: countriesData == null

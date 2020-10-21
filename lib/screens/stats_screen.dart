@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
 import 'dart:ui' as ui;
+import 'package:pie_chart/pie_chart.dart';
 
 class StatsScreen extends StatefulWidget {
   CountryName mycountry;
@@ -26,6 +27,13 @@ class _StatsScreenState extends State<StatsScreen> {
   int Affected, Deaths, Recovered, Active, Critical;
   CountryName mycountry;
   http.Response response;
+
+  Map<String, double> pieData = new Map();
+  List<Color> colorsList = [
+    Colors.green,
+    Colors.red,
+    Colors.lightBlue,
+  ];
   // String country=HomeScreen
   fetchCountriesData() async {
     if (idWorld == 0) {
@@ -100,6 +108,13 @@ class _StatsScreenState extends State<StatsScreen> {
         });
       }
     }
+//    pieData.addAll({
+//      'Affected Cases': Affected.toDouble(),
+//      'Deaths': Deaths.toDouble(),
+//      'Recovered': Recovered.toDouble(),
+//      'Active': Active.toDouble(),
+//      'Critical': Critical.toDouble(),
+//    });
   }
 
   String getCurrentLocale() {
@@ -128,36 +143,8 @@ class _StatsScreenState extends State<StatsScreen> {
           _buildHeader(),
           _buildRegionTabBar(),
           _buildStatsTabBar(),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            sliver: SliverToBoxAdapter(
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.25,
-                child: Column(
-                  children: <Widget>[
-                    Flexible(
-                      child: Row(
-                        children: <Widget>[
-                          _buildStatCard(
-                              'Affected Cases', Affected, Colors.orange),
-                          _buildStatCard('Deaths', Deaths, Colors.red),
-                        ],
-                      ),
-                    ),
-                    Flexible(
-                      child: Row(
-                        children: <Widget>[
-                          _buildStatCard('Recovered', Recovered, Colors.green),
-                          _buildStatCard('Active', Active, Colors.lightBlue),
-                          _buildStatCard('Critical', Critical, Colors.purple),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          _buildStatsGrid(),
+          _buildPieChart(),
         ],
       ),
     );
@@ -208,12 +195,6 @@ class _StatsScreenState extends State<StatsScreen> {
               setState(() {
                 fetchCountriesData();
               });
-
-              print(idWorld);
-              print(response.body);
-
-              print(Affected);
-              print(Deaths);
             },
           ),
         ),
@@ -244,6 +225,77 @@ class _StatsScreenState extends State<StatsScreen> {
               });
             },
           ),
+        ),
+      ),
+    );
+  }
+
+  SliverPadding _buildStatsGrid() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      sliver: SliverToBoxAdapter(
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.25,
+          child: Column(
+            children: <Widget>[
+              Flexible(
+                child: Row(
+                  children: <Widget>[
+                    _buildStatCard('Affected Cases', Affected, Colors.orange),
+                    _buildStatCard('Deaths', Deaths, Colors.red),
+                  ],
+                ),
+              ),
+              Flexible(
+                child: Row(
+                  children: <Widget>[
+                    _buildStatCard('Recovered', Recovered, Colors.green),
+                    _buildStatCard('Active', Active, Colors.lightBlue),
+                    _buildStatCard('Critical', Critical, Colors.purple),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  SliverPadding _buildPieChart() {
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 15.0),
+      sliver: SliverToBoxAdapter(
+        child: Container(
+          height: 250.0,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0),
+              topRight: Radius.circular(20.0),
+            ),
+          ),
+          child: countriesData == null
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : PieChart(
+                  dataMap: {
+                    'Recovered': Recovered.toDouble(),
+                    'Deaths': Deaths.toDouble(),
+                    'Active': Active.toDouble(),
+                  },
+                  animationDuration: Duration(milliseconds: 800),
+                  colorList: colorsList,
+                  chartRadius: 165.0,
+                  chartLegendSpacing: 40.0,
+                  chartValuesOptions: ChartValuesOptions(
+                    showChartValueBackground: false,
+                    showChartValues: true,
+                    showChartValuesInPercentage: true,
+                    showChartValuesOutside: true,
+                  ),
+                ),
         ),
       ),
     );
